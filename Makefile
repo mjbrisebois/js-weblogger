@@ -48,10 +48,12 @@ clean-files-all-force:	clean-remove-chaff
 #
 # NPM
 #
-preview-package:	clean-files test
-	npm pack --dry-run .
+prepare-package:
+	npm run build
 	gzip -kf dist/*.js
-create-package:		clean-files test
+preview-package:	clean-files test prepare-package
+	npm pack --dry-run .
+create-package:		clean-files test prepare-package
 	npm pack .
-publish-package:	clean-files test
+publish-package:	clean-files test prepare-package
 	npm publish --access public .
