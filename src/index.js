@@ -33,9 +33,9 @@ function log ( settings, ctx, lvl, msg, ...args ) {
 	.toUpperCase();
 
     if ( settings.colors && ( settings.colors === "false" || settings.colors === "0" ) )
-	return console.error(`${datetime} [ ${context} ] ${level}: ${msg}`, ...args );
+	return console.log(`${datetime} [ ${context} ] ${level}: ${msg}`, ...args );
 
-    console.error(
+    console.log(
 	`${datetime} [ %c${context}%c ] %c${level}%c: %c${msg}`,
 	"color: #75008a",	"color: initial",
 	settings.lvl_color,	"color: initial",
