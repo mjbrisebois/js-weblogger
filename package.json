@@ -1,0 +1,31 @@
+{
+  "name": "@whi/weblogger",
+  "version": "0.1.0",
+  "description": "A minimal logger implementation designed to work in web browsers",
+  "main": "src/index.js",
+  "browser": "dist/weblogger.bundled.js",
+  "files": [
+    "README.md",
+    "src/index.js",
+    "src/weblogger.bundled.js"
+  ],
+  "scripts": {
+    "build": "webpack",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Matthew Brisebois <matthew@webheroes.ca>",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mjbrisebois/js-weblogger/"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@whi/stdlog": "^0.3.4",
+    "chai": "^4.3.4",
+    "mocha": "^9.0.0",
+    "node-localstorage": "^2.2.1",
+    "webpack": "^5.51.1",
+    "webpack-cli": "^4.8.0"
+  }
+}
