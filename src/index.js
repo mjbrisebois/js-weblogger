@@ -1,8 +1,4 @@
 
-const COLOR_SETTING			= window.localStorage.getItem("LOG_COLOR");
-const LOCAL_LEVEL			= window.localStorage.getItem("LOG_LEVEL");
-const DEFAULT_LEVEL			= LOCAL_LEVEL || 3;
-
 const CTX_LENGTH			= 10;
 const LVL_LENGTH			= 5;
 
@@ -47,6 +43,10 @@ function log ( settings, ctx, lvl, msg, ...args ) {
 
 class Logger {
     constructor ( context, level, colors ) {
+	const COLOR_SETTING		= typeof window !== "undefined" ? window.localStorage.getItem("LOG_COLOR") : null;
+	const LOCAL_LEVEL		= typeof window !== "undefined" ? window.localStorage.getItem("LOG_LEVEL") : null;
+	const DEFAULT_LEVEL		= LOCAL_LEVEL || 3;
+
 	this.context			= context;
 
 	this._color_setting		= COLOR_SETTING || colors;

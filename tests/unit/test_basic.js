@@ -4,9 +4,6 @@ const log				= require('@whi/stdlog')(path.basename( __filename ), {
 });
 
 const { LocalStorage }			= require('node-localstorage');
-global.window				= {
-    "localStorage": new LocalStorage("./scratch"),
-};
 
 const expect				= require('chai').expect;
 const { Logger }			= require('../../src/index.js');
@@ -35,6 +32,27 @@ function basic_tests () {
 
 	expect( log.info("Good")	).to.be.true;
 	expect( log.debug("Bad")	).to.be.false;
+    });
+
+    it("should use local storage settings", async () => {
+	global.window				= {
+	    "localStorage": new LocalStorage("./scratch"),
+	};
+
+	window.localStorage.setItem("LOG_COLOR", "false");
+	window.localStorage.setItem("LOG_LEVEL", "error");
+
+	const log			= new Logger("test_basic.js");
+
+	expect( log._color_setting	).to.equal("false");
+
+	expect( log.error("Good")	).to.be.true;
+	expect( log.warn("Bad")		).to.be.false;
+
+	log.setLevel( 2 );
+
+	expect( log.warn("Good")	).to.be.true;
+	expect( log.normal("Bad")	).to.be.false;
     });
 }
 
