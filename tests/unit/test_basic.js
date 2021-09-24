@@ -16,15 +16,25 @@ function basic_tests () {
     it("should create logger", async () => {
 	const log			= new Logger("test_basic.js", "trace" );
 
-	log.fatal("Testing");
-	log.error("Testing");
-	log.warn("Testing");
-	log.normal("Testing");
-	log.info("Testing");
-	log.debug("Testing");
-	log.trace("Testing");
+	expect( log.fatal("Testing")	).to.be.true;
+	expect( log.error("Testing")	).to.be.true;
+	expect( log.warn("Testing")	).to.be.true;
+	expect( log.normal("Testing")	).to.be.true;
+	expect( log.info("Testing")	).to.be.true;
+	expect( log.debug("Testing")	).to.be.true;
+	expect( log.trace("Testing")	).to.be.true;
+    });
 
-	expect( log.info		).to.be.a("function");
+    it("should update level", async () => {
+	const log			= new Logger("test_basic.js");
+
+	expect( log.normal("Good")	).to.be.true;
+	expect( log.info("Bad")		).to.be.false;
+
+	log.setLevel( 4 );
+
+	expect( log.info("Good")	).to.be.true;
+	expect( log.debug("Bad")	).to.be.false;
     });
 }
 

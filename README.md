@@ -72,6 +72,26 @@ Or, a callback function that only evaluates when a message will be logged.
 log.debug("Expensive arg computation: %s", () => [ value.map(...).join(", ") ]);
 ```
 
+### API Reference
+
+#### `new Logger( context, level, colors )`
+Change this Logger's verbosity level.
+
+- `context` - *(required)* an identifier used in the log format
+- `level` - *(optional)* the starting log level
+  - defaults to level 3 (normal)
+- `colors` - *(optional)* a boolean for log coloring
+  - defaults to `true`
+
+
+#### `<Logger>.setLevel( level )`
+Change this Logger's verbosity level.
+
+- `level` - *(required)* the new log level
+
+Returns the integer value of the new level.
+
+
 ### Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md)

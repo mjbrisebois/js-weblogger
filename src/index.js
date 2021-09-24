@@ -1,6 +1,7 @@
 
 const COLOR_SETTING			= window.localStorage.getItem("LOG_COLOR");
-const DEFAULT_LEVEL			= window.localStorage.getItem("LOG_LEVEL");
+const LOCAL_LEVEL			= window.localStorage.getItem("LOG_LEVEL");
+const DEFAULT_LEVEL			= LOCAL_LEVEL || 3;
 
 const CTX_LENGTH			= 10;
 const LVL_LENGTH			= 5;
@@ -45,11 +46,16 @@ function log ( settings, ctx, lvl, msg, ...args ) {
 }
 
 class Logger {
-    constructor ( context, level = 3, colors ) {
+    constructor ( context, level, colors ) {
 	this.context			= context;
 
 	this._color_setting		= COLOR_SETTING || colors;
-	this._level			= DEFAULT_LEVEL || level;
+
+	this.setLevel( level || DEFAULT_LEVEL );
+    }
+
+    setLevel ( level ) {
+	this._level			= level;
 
 	if ( typeof this._level === "string" ) {
 	    if ( isNaN( this._level ) === false )
@@ -70,10 +76,14 @@ class Logger {
 			lvl_color,
 			msg_color,
 		    }, this.context, name, ...args );
+
+		    return this.level[name];
 		}
 
 		return acc;
 	    }, {} );
+
+	return this._level;
     }
 }
 
