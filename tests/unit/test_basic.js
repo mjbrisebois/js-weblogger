@@ -6,7 +6,10 @@ const log				= require('@whi/stdlog')(path.basename( __filename ), {
 const { LocalStorage }			= require('node-localstorage');
 
 const expect				= require('chai').expect;
-const { Logger }			= require('../../src/index.js');
+const { Logger, ...weblogger }		= require('../../src/index.js');
+
+if ( !process.env.LOG_LEVEL )
+    weblogger.console.log		= () => {};
 
 
 function basic_tests () {
@@ -53,6 +56,17 @@ function basic_tests () {
 
 	expect( log.warn("Good")	).to.be.true;
 	expect( log.normal("Bad")	).to.be.false;
+    });
+
+    it("should use specific local storage settings", async () => {
+	window.localStorage.setItem("LOG_LEVEL",		"trace");
+	window.localStorage.setItem("LOG_LEVEL.submodule",	"error");
+
+	const log1			= new Logger("module");
+	const log2			= new Logger("submodule");
+
+	expect( log1.trace("allow")	).to.be.true;
+	expect( log2.trace("deny")	).to.be.false;
     });
 }
 

@@ -12,6 +12,7 @@ const LEVEL				= {
     "trace":	[ 6, "color: #aaa" ],
 };
 
+
 function log ( settings, ctx, lvl, msg, ...args ) {
     if ( typeof args[0] === "function" ) {
 	args				= args[0]();
@@ -30,9 +31,9 @@ function log ( settings, ctx, lvl, msg, ...args ) {
 	.toUpperCase();
 
     if ( settings.colors && ( settings.colors === "false" || settings.colors === "0" ) )
-	return console.log(`${datetime} [ ${context} ] ${level}: ${msg}`, ...args );
+	return module.exports.console.log(`${datetime} [ ${context} ] ${level}: ${msg}`, ...args );
 
-    console.log(
+    module.exports.console.log(
 	`${datetime} [ %c${context}%c ] %c${level}%c: %c${msg}`,
 	"color: #75008a",	"color: initial",
 	settings.lvl_color,	"color: initial",
@@ -41,10 +42,17 @@ function log ( settings, ctx, lvl, msg, ...args ) {
     );
 }
 
+function getLocalSetting ( ctx ) {
+    const override			= window.localStorage.getItem(`LOG_LEVEL.${ctx}`);
+    const default_value			= window.localStorage.getItem("LOG_LEVEL");
+
+    return override || default_value || null;
+}
+
 class Logger {
     constructor ( context, level, colors ) {
 	const COLOR_SETTING		= typeof window !== "undefined" ? window.localStorage.getItem("LOG_COLOR") : null;
-	const LOCAL_LEVEL		= typeof window !== "undefined" ? window.localStorage.getItem("LOG_LEVEL") : null;
+	const LOCAL_LEVEL		= typeof window !== "undefined" ? getLocalSetting( context ) : null;
 	const DEFAULT_LEVEL		= LOCAL_LEVEL || 3;
 
 	this.context			= context;
@@ -90,4 +98,5 @@ class Logger {
 
 module.exports = {
     Logger,
+    console,
 };
