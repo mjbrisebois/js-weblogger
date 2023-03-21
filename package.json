@@ -1,6 +1,6 @@
 {
   "name": "@whi/weblogger",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "A minimal logger implementation designed to work in web browsers",
   "main": "src/index.js",
   "browser": "dist/weblogger.bundled.js",
