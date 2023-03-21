@@ -49,7 +49,7 @@ clean-files-all-force:	clean-remove-chaff
 # NPM
 #
 prepare-package:
-	npm run build
+	npx webpack
 	gzip -kf dist/*.js
 preview-package:	clean-files test prepare-package
 	npm pack --dry-run .

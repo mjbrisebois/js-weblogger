@@ -12,6 +12,25 @@ const LEVEL				= {
     "trace":	[ 6, "color: #aaa" ],
 };
 
+const TERMINAL_COLOR_RESET		= "\x1b[0m";
+const LEVEL_TERMINAL			= {
+    "fatal":	"\x1b[91;1m",
+    "error":	"\x1b[31m",
+    "warn":	"\x1b[33;1m",
+    "normal":	"\x1b[35;1m",
+    "info":	"\x1b[36;1m",
+    "debug":	"\x1b[1m",
+    "trace":	"\x1b[2;1m",
+
+    "fatal_message":	"\x1b[91;1m",
+    "error_message":	"\x1b[31m",
+    "warn_message":	"\x1b[22;33m",
+    "normal_message":	"\x1b[37m",
+    "info_message":	TERMINAL_COLOR_RESET,
+    "debug_message":	TERMINAL_COLOR_RESET,
+    "trace_message":	"\x1b[0;2m",
+};
+
 
 function log ( settings, ctx, lvl, msg, ...args ) {
     if ( typeof args[0] === "function" ) {
@@ -33,13 +52,23 @@ function log ( settings, ctx, lvl, msg, ...args ) {
     if ( settings.colors && ( settings.colors === "false" || settings.colors === "0" ) )
 	return module.exports.console.log(`${datetime} [ ${context} ] ${level}: ${msg}`, ...args );
 
-    module.exports.console.log(
-	`${datetime} [ %c${context}%c ] %c${level}%c: %c${msg}`,
-	"color: #75008a",	"color: initial",
-	settings.lvl_color,	"color: initial",
-	settings.msg_color || settings.lvl_color,
-	...args
-    );
+    if ( typeof window !== "undefined" ) {
+	module.exports.console.log(
+	    `${datetime} [ %c${context}%c ] %c${level}%c: %c${msg}`,
+	    "color: #75008a",	"color: initial",
+	    settings.lvl_color,	"color: initial",
+	    settings.msg_color || settings.lvl_color,
+	    ...args
+	);
+    }
+    else {
+	module.exports.console.log(
+	    `${datetime} [ \x1b[35m${context}\x1b[0m ] %s${level}\x1b[0m: %s${msg}\x1b[0m`,
+	    LEVEL_TERMINAL[ lvl ],
+	    LEVEL_TERMINAL[ lvl + '_message' ] || TERMINAL_COLOR_RESET,
+	    ...args
+	);
+    }
 }
 
 function getLocalSetting ( ctx ) {
@@ -51,8 +80,9 @@ function getLocalSetting ( ctx ) {
 
 class Logger {
     constructor ( context, level, colors ) {
-	const COLOR_SETTING		= typeof window !== "undefined" ? window.localStorage.getItem("LOG_COLOR") : null;
-	const LOCAL_LEVEL		= typeof window !== "undefined" ? getLocalSetting( context ) : null;
+	const IS_BROWSER		= typeof window !== "undefined";
+	const COLOR_SETTING		= IS_BROWSER ? window.localStorage.getItem("LOG_COLOR") : null;
+	const LOCAL_LEVEL		= IS_BROWSER ? getLocalSetting( context ) : null;
 	const DEFAULT_LEVEL		= LOCAL_LEVEL || 3;
 
 	this.context			= context;
