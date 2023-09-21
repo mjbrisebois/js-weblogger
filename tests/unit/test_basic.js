@@ -1,15 +1,12 @@
-const path				= require('path');
-const log				= require('@whi/stdlog')(path.basename( __filename ), {
-    level: process.env.LOG_LEVEL || 'fatal',
-});
+import { LocalStorage }			from 'node-localstorage';
 
-const { LocalStorage }			= require('node-localstorage');
-
-const expect				= require('chai').expect;
-const { Logger, ...weblogger }		= require('../../src/index.js');
+import { expect }			from 'chai';
+import { Logger, setConsole }		from '../../src/index.js';
 
 if ( !process.env.LOG_LEVEL )
-    weblogger.console.log		= () => {};
+    setConsole({
+	log () {},
+    });
 
 
 function basic_tests () {

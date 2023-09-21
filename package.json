@@ -2,6 +2,7 @@
   "name": "@whi/weblogger",
   "version": "0.1.6",
   "description": "A minimal logger implementation designed to work in web browsers",
+  "type": "module",
   "main": "src/index.js",
   "browser": "dist/weblogger.bundled.js",
   "files": [
@@ -18,9 +19,7 @@
     "type": "git",
     "url": "https://github.com/mjbrisebois/js-weblogger/"
   },
-  "dependencies": {},
   "devDependencies": {
-    "@whi/stdlog": "^0.3.4",
     "chai": "^4.3.4",
     "mocha": "^10.0.0",
     "node-localstorage": "^2.2.1",

@@ -31,6 +31,7 @@ const LEVEL_TERMINAL			= {
     "trace_message":	"\x1b[0;2m",
 };
 
+let $console				= console;
 
 function log ( settings, ctx, lvl, msg, ...args ) {
     if ( typeof args[0] === "function" ) {
@@ -50,10 +51,10 @@ function log ( settings, ctx, lvl, msg, ...args ) {
 	.toUpperCase();
 
     if ( settings.colors && ( settings.colors === "false" || settings.colors === "0" ) )
-	return module.exports.console.log(`${datetime} [ ${context} ] ${level}: ${msg}`, ...args );
+	return $console.log(`${datetime} [ ${context} ] ${level}: ${msg}`, ...args );
 
     if ( typeof window !== "undefined" ) {
-	module.exports.console.log(
+	$console.log(
 	    `${datetime} [ %c${context}%c ] %c${level}%c: %c${msg}`,
 	    "color: #75008a",	"color: initial",
 	    settings.lvl_color,	"color: initial",
@@ -62,7 +63,7 @@ function log ( settings, ctx, lvl, msg, ...args ) {
 	);
     }
     else {
-	module.exports.console.log(
+	$console.log(
 	    `${datetime} [ \x1b[35m${context}\x1b[0m ] %s${level}\x1b[0m: %s${msg}\x1b[0m`,
 	    LEVEL_TERMINAL[ lvl ],
 	    LEVEL_TERMINAL[ lvl + '_message' ] || TERMINAL_COLOR_RESET,
@@ -78,7 +79,7 @@ function getLocalSetting ( ctx ) {
     return override || default_value || null;
 }
 
-class Logger {
+export class Logger {
     constructor ( context, level, colors ) {
 	const IS_BROWSER		= typeof window !== "undefined";
 	const COLOR_SETTING		= IS_BROWSER ? window.localStorage.getItem("LOG_COLOR") : null;
@@ -126,7 +127,12 @@ class Logger {
 }
 
 
-module.exports = {
+export function setConsole ( console ) {
+    $console				= console;
+}
+
+
+export default {
     Logger,
-    console,
+    setConsole,
 };
