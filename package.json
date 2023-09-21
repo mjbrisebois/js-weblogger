@@ -1,6 +1,6 @@
 {
   "name": "@whi/weblogger",
-  "version": "0.1.6",
+  "version": "0.2.0",
   "description": "A minimal logger implementation designed to work in web browsers",
   "type": "module",
   "main": "src/index.js",
