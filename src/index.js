@@ -93,6 +93,10 @@ export class Logger {
 	this.setLevel( level || DEFAULT_LEVEL );
     }
 
+    get level_rank () {
+	return this._level;
+    }
+
     setLevel ( level ) {
 	this._level			= level;
 
