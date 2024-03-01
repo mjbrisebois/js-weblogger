@@ -63,6 +63,8 @@ function log ( settings, ctx, lvl, msg, ...args ) {
 	);
     }
     else {
+	// TODO: fix inconsistent color settings; the browser color settings are passed in but the
+	// terminal is hard-coded.
 	$console.log(
 	    `${datetime} [ \x1b[35m${context}\x1b[0m ] %s${level}\x1b[0m: %s${msg}\x1b[0m`,
 	    LEVEL_TERMINAL[ lvl ],
@@ -79,8 +81,24 @@ function getLocalSetting ( ctx ) {
     return override || default_value || null;
 }
 
+type LogFunction = ( msg: string, ...args: Array<any> ) => boolean;
+
 export class Logger {
-    constructor ( context, level, colors ) {
+    #level		: number;
+    #color_setting	: any;
+
+    context		: string;
+    levels		: Record<string, number>;
+
+    fatal		: LogFunction;
+    error		: LogFunction;
+    warn		: LogFunction;
+    normal		: LogFunction;
+    info		: LogFunction;
+    debug		: LogFunction;
+    trace		: LogFunction;
+
+    constructor ( context, level, colors? ) {
 	const IS_BROWSER		= typeof window !== "undefined";
 	const COLOR_SETTING		= IS_BROWSER ? window.localStorage.getItem("LOG_COLOR") : null;
 	const LOCAL_LEVEL		= IS_BROWSER ? getLocalSetting( context ) : null;
@@ -88,45 +106,55 @@ export class Logger {
 
 	this.context			= context;
 
-	this._color_setting		= COLOR_SETTING || colors;
+	this.#color_setting		= COLOR_SETTING || colors;
 
 	this.setLevel( level || DEFAULT_LEVEL );
     }
 
+    // Legacy support
     get level_rank () {
-	return this._level;
+	return this.#level;
+    }
+
+    get level () {
+	return this.#level;
+    }
+
+    get color_setting () {
+	return this.#color_setting;
     }
 
     setLevel ( level ) {
-	this._level			= level;
-
-	if ( typeof this._level === "string" ) {
-	    if ( isNaN( this._level ) === false )
-		this._level		= parseInt( this._level );
-	    else if ( LEVEL[ this._level.toLowerCase() ] === undefined )
-		throw new Error(`Unknown log level '${this._level}'; options are ${Object.keys(LEVEL).join(", ")}`);
+	if ( typeof level === "string" ) {
+	    if ( isNaN( parseInt(level) ) === false )
+		this.#level		= parseInt( level );
+	    else if ( LEVEL[ level.toLowerCase() ] === undefined )
+		throw new Error(`Unknown log level '${this.#level}'; options are ${Object.keys(LEVEL).join(", ")}`);
 	    else
-		this._level		= LEVEL[ this._level.toLowerCase() ][0];
+		this.#level		= LEVEL[ level.toLowerCase() ][0];
 	}
+	else
+	    this.#level			= level;
 
-	this.level			= Object.entries( LEVEL )
+	this.levels			= Object.entries( LEVEL )
 	    .reduce( (acc, [name, [verbosity, lvl_color, msg_color]]) => {
-		acc[name]			= this._level >= verbosity;
+		acc[name]			= this.#level >= (verbosity as number);
 
-		this[name]			= function ( ...args ) {
-		    this.level[name] && log({
-			"colors": this._color_setting,
+		this[name]			= function ( msg, ...args ) {
+		    this.levels[name] && log({
+			"colors": this.#color_setting,
 			lvl_color,
 			msg_color,
-		    }, this.context, name, ...args );
+		    }, this.context, name, msg, ...args );
 
-		    return this.level[name];
+		    return this.levels[name];
 		}
 
 		return acc;
 	    }, {} );
+	Object.freeze( this.levels );
 
-	return this._level;
+	return this.#level;
     }
 }
 

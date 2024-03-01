@@ -1,4 +1,14 @@
 #
+# Building
+#
+lib/index.js:		src/*.ts Makefile
+	rm -f lib/*.js
+	npx tsc -t es2022 -m es2022 --moduleResolution node --esModuleInterop	\
+		--strictNullChecks						\
+		--outDir lib -d --sourceMap src/index.ts
+
+
+#
 # Project
 #
 package-lock.json:	package.json
@@ -7,7 +17,7 @@ package-lock.json:	package.json
 node_modules:		package-lock.json
 	npm install
 	touch $@
-build:			node_modules
+build:			node_modules lib/index.js
 
 
 #

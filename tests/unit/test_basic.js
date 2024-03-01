@@ -1,7 +1,7 @@
 import { LocalStorage }			from 'node-localstorage';
 
 import { expect }			from 'chai';
-import { Logger, setConsole }		from '../../src/index.js';
+import { Logger, setConsole }		from '../../lib/index.js';
 
 if ( !process.env.LOG_LEVEL )
     setConsole({
@@ -44,7 +44,7 @@ function basic_tests () {
 
 	const log			= new Logger("test_basic.js");
 
-	expect( log._color_setting	).to.equal("false");
+	expect( log.color_setting	).to.equal("false");
 
 	expect( log.error("Good")	).to.be.true;
 	expect( log.warn("Bad")		).to.be.false;

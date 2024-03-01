@@ -3,12 +3,12 @@
   "version": "0.2.1",
   "description": "A minimal logger implementation designed to work in web browsers",
   "type": "module",
-  "main": "src/index.js",
+  "main": "lib/index.js",
   "browser": "dist/weblogger.bundled.js",
   "files": [
     "README.md",
-    "src/index.js",
-    "dist/weblogger.bundled.js"
+    "lib/**",
+    "dist/**"
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -23,6 +23,7 @@
     "chai": "^4.3.4",
     "mocha": "^10.0.0",
     "node-localstorage": "^2.2.1",
+    "typescript": "^5.3.3",
     "webpack": "^5.76.2",
     "webpack-cli": "^4.8.0"
   }
