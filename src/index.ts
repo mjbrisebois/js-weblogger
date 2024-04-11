@@ -11,6 +11,9 @@ const LEVEL				= {
     "debug":	[ 5, "color: #008024", "color: #777" ],
     "trace":	[ 6, "color: #aaa" ],
 };
+const RANK_TO_LEVEL_NAME		= Object.fromEntries(
+    Object.entries(LEVEL).map( ([ level, [ rank ] ]) => [rank, level])
+);
 
 const TERMINAL_COLOR_RESET		= "\x1b[0m";
 const LEVEL_TERMINAL			= {
@@ -111,13 +114,17 @@ export class Logger {
 	this.setLevel( level || DEFAULT_LEVEL );
     }
 
-    // Legacy support
     get level_rank () {
 	return this.#level;
     }
 
+    // Legacy support
     get level () {
 	return this.#level;
+    }
+
+    get level_name () {
+	return RANK_TO_LEVEL_NAME[ this.#level ];
     }
 
     get color_setting () {

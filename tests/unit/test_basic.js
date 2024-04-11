@@ -65,6 +65,28 @@ function basic_tests () {
 	expect( log1.trace("allow")	).to.be.true;
 	expect( log2.trace("deny")	).to.be.false;
     });
+
+    it("should get level rank", async () => {
+	{
+	    const log			= new Logger("foo", "fatal" );
+	    expect( log.level_rank	).to.equal( 0 );
+	}
+	{
+	    const log			= new Logger("foo", "trace");
+	    expect( log.level_rank	).to.equal( 6 );
+	}
+    });
+
+    it("should get level", async () => {
+	{
+	    const log			= new Logger("foo", "fatal" );
+	    expect( log.level_name	).to.equal( "fatal" );
+	}
+	{
+	    const log			= new Logger("foo", "trace");
+	    expect( log.level_name	).to.equal( "trace" );
+	}
+    });
 }
 
 describe("Web Logger", () => {
